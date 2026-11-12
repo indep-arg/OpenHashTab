@@ -63,7 +63,15 @@ jobs:
           CI_VERSION_PATCH: ${{ steps.checktag.outputs.version_patch }}
         run: |
           cd ${{ github.workspace }}
-          .\build_all.ps1
+          .\build_all.ps1 *>&1 | Tee-Object -FilePath build.log
+          $Code = $LASTEXITCODE
+          If ($Code -ne 0) {
+            # Surface the first errors as annotations, so they show up in the run summary
+            Select-String -Path build.log -Pattern 'error[: ]|FAILED:|CMake Error' |
+              Select-Object -First 10 |
+              ForEach-Object { Write-Host "::error::$($_.Line.Trim())" }
+            exit $Code
+          }
 
       - name: Run hash tests
         run: |
