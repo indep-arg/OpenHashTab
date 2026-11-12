@@ -14,7 +14,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           submodules: recursive
           fetch-depth: 0
@@ -55,19 +55,24 @@ jobs:
           Echo ("version_patch=" + $VersionPatch) >> $Env:GITHUB_OUTPUT;
 
       - name: Build all
+        env:
+          CI_VERSION: ${{ steps.checktag.outputs.version }}
+          CI_VERSION_MAJOR: ${{ steps.checktag.outputs.version_major }}
+          CI_VERSION_MINOR: ${{ steps.checktag.outputs.version_minor }}
+          CI_VERSION_PATCH: ${{ steps.checktag.outputs.version_patch }}
         run: |
           cd ${{ github.workspace }}
           .\build_all.ps1
 
       - name: Upload installers
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v7
         with:
           name: installers
           path: |
             .\install\*.msi
 
       - name: Upload unpacked
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v7
         with:
           name: unpacked
           path: |
