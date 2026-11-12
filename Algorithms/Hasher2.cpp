@@ -20,7 +20,6 @@
 #include <limits>
 
 #include <mbedtls/md.h>
-#include <mbedtls/md2.h>
 #include <mbedtls/md4.h>
 #include <mbedtls/md5.h>
 #include <mbedtls/sha1.h>
@@ -103,7 +102,6 @@ int sha256_starts_ret_binder(mbedtls_sha256_context* ctx) { return mbedtls_sha25
 template <bool is384>
 int sha512_starts_ret_binder(mbedtls_sha512_context* ctx) { return mbedtls_sha512_starts_ret(ctx, is384); }
 
-using Md2HashContext = MBED_HASH_CONTEXT_TYPE(md2, 16);
 using Md4HashContext = MBED_HASH_CONTEXT_TYPE(md4, 16);
 using Md5HashContext = MBED_HASH_CONTEXT_TYPE(md5, 16);
 using RipeMD160HashContext = MBED_HASH_CONTEXT_TYPE(ripemd160, 20);
