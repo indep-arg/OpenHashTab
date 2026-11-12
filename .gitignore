@@ -2,3 +2,7 @@
 build
 install
 obj
+.vs
+out
+CMakeUserPresets.json
+cmake-build-*

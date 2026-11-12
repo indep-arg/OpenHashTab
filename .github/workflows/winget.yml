@@ -6,9 +6,10 @@ on:
 
 jobs:
   publish:
+    if: github.repository == 'namazso/OpenHashTab'
     runs-on: ubuntu-latest
     steps:
-      - uses: vedantmgoyal9/winget-releaser@main
+      - uses: vedantmgoyal9/winget-releaser@v2
         with:
           identifier: namazso.OpenHashTab
           token: ${{ secrets.WINGET_TOKEN }}

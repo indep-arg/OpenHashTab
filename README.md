@@ -112,4 +112,4 @@ All original code in this repo is licensed under the following license, unless e
     You should have received a copy of the GNU General Public License
     along with OpenHashTab.  If not, see <https://www.gnu.org/licenses/>.
 
-This software also contains or uses code from various other sources, for a complete list see [InstallerLicense.rtf](InstallerLicense.rtf)
+This software also contains or uses code from various other sources, for a complete list see [InstallerLicense.rtf](Setup/InstallerLicense.rtf)

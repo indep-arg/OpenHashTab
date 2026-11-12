@@ -192,8 +192,8 @@ Write-Host "Using Visual Studio at: $VSRoot"
 
 $x86_Environment = Get-CmdEnvironment -ScriptPath "$VSRoot\VC\Auxiliary\Build\vcvarsamd64_x86.bat";
 $x86_Environment["CFLAGS"] = "--target=i686-pc-windows-msvc";
-$x86_Environment["CXXFLAGS"] = "--target=i686-pc-windows-msv";
-$x86_Environment["LDFLAGS"] = "--target=i686-pc-windows-msv";
+$x86_Environment["CXXFLAGS"] = "--target=i686-pc-windows-msvc";
+$x86_Environment["LDFLAGS"] = "--target=i686-pc-windows-msvc";
 $x64_Environment = Get-CmdEnvironment -ScriptPath "$VSRoot\VC\Auxiliary\Build\vcvars64.bat";
 $x64_Environment["CFLAGS"] = "--target=x86_64-pc-windows-msvc";
 $x64_Environment["CXXFLAGS"] = "--target=x86_64-pc-windows-msvc";
@@ -213,8 +213,6 @@ foreach ($env in @($x86_Environment, $x64_Environment, $ARM64_Environment)) {
     $env["RC"] = "$LlvmPath\llvm-rc.exe";
     $env["Path"] += ";$WinSdkDir\bin\$WinSdkVer\x64";
 }
-
-Write-Host "bleh"
 
 New-Item -Path "install" -ItemType Directory -Force
 New-Item -Path "install\algorithms" -ItemType Directory -Force
@@ -297,7 +295,7 @@ $OhtVersionNumeric = "$OhtVersionMajor.$OhtVersionMinor.$OhtVersionPatch";
             "-property:ProductVersion=$OhtVersionNumeric" `
             "-property:BuildDirectory32=$((Get-Item $BuildDir32).FullName)" `
             "-property:BuildDirectory=$((Get-Item $BuildDir).FullName)" `
-            "-property:AlgorithmsDllsDirectory=$AlgorithmsInstallDir" `
+            "-property:AlgorithmsDllsDirectory=$AlgorithmsInstallDir"
     }
 }
 
