@@ -64,6 +64,39 @@ jobs:
           cd ${{ github.workspace }}
           .\build_all.ps1
 
+      - name: Run hash tests
+        run: |
+          cd ${{ github.workspace }}
+          $Env:Path = "$((Get-Item .\install\algorithms).FullName);$Env:Path"
+          New-Item -Path "install\hash-tests" -ItemType Directory -Force | Out-Null
+          $Golden = ".\OpenHashTab\HashTests\golden.txt"
+          $Failed = $false
+          "x64", "x86" | ForEach-Object {
+            $Exe = ".\build\oht-$_\HashTests.exe"
+            If (-not (Test-Path $Exe)) { Write-Host "::error::$Exe was not built"; $Failed = $true; return }
+            Write-Host "=== HashTests $_ (generate)"
+            & $Exe --generate ".\install\hash-tests\golden-$_.txt"
+            If ($LASTEXITCODE -ne 0) { $Failed = $true }
+            If (Test-Path $Golden) {
+              Write-Host "=== HashTests $_ (verify)"
+              & $Exe $Golden
+              If ($LASTEXITCODE -ne 0) { $Failed = $true }
+            }
+          }
+          If (-not (Test-Path $Golden)) {
+            Write-Host "::warning::No golden file committed yet, only cross-flavor and known vector checks were run"
+            Get-Content ".\install\hash-tests\golden-x64.txt"
+          }
+          If ($Failed) { exit 1 }
+
+      - name: Upload hash test results
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: hash-tests
+          path: |
+            .\install\hash-tests\*.txt
+
       - name: Upload installers
         uses: actions/upload-artifact@v7
         with:

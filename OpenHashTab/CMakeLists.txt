@@ -78,6 +78,8 @@ add_subdirectory(LegacyAlgorithms)
 
 add_subdirectory(Benchmark)
 
+add_subdirectory(HashTests)
+
 add_subdirectory(OpenHashTab)
 
 add_subdirectory(StandaloneStub)
