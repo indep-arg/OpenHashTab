@@ -1,5 +1,5 @@
 /**
- * \file mbedtls_config.h
+ * \file oht_mbedtls_config.h
  *
  * \brief Minimal Mbed TLS 3.6 configuration for OpenHashTab
  *
@@ -7,6 +7,10 @@
  * Mbed TLS (TLS, X.509, PK, ciphers, PSA, RNG, ...) is built or used.
  *
  * MD4 is no longer part of Mbed TLS 3.x and is provided by Algorithms/md4.
+ *
+ * Note: this file must not be named mbedtls_config.h, since build_info.h
+ * includes MBEDTLS_CONFIG_FILE with quotes, which would pick up the default
+ * include/mbedtls/mbedtls_config.h sitting next to it instead.
  */
 /*
  *  Copyright The Mbed TLS Contributors

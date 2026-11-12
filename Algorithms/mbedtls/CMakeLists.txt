@@ -13,4 +13,4 @@ add_library(${PROJECT_NAME} STATIC
 
 target_include_directories(${PROJECT_NAME} PUBLIC mbedtls/include ${CMAKE_CURRENT_SOURCE_DIR})
 
-target_compile_definitions(${PROJECT_NAME} PUBLIC MBEDTLS_CONFIG_FILE="mbedtls_config.h")
+target_compile_definitions(${PROJECT_NAME} PUBLIC MBEDTLS_CONFIG_FILE="oht_mbedtls_config.h")
