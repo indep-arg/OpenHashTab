@@ -52,6 +52,7 @@ add_subdirectory(xxHash)
 add_subdirectory(crc32)
 add_subdirectory(crc64)
 add_subdirectory(mbedtls)
+add_subdirectory(md4)
 add_subdirectory(blake2sp)
 add_subdirectory(BLAKE3)
 
@@ -70,6 +71,7 @@ target_link_libraries(${PROJECT_NAME}
         crc32
         crc64
         mbedtls
+        md4
         blake2sp
         BLAKE3
         ntdllp

@@ -1,6 +1,7 @@
 [submodule "Algorithms/mbedtls/mbedtls"]
 	path = Algorithms/mbedtls/mbedtls
-	url = https://github.com/ARMmbed/mbedtls.git
+	url = https://github.com/Mbed-TLS/mbedtls.git
+	branch = mbedtls-3.6
 [submodule "Algorithms/xxHash/xxHash"]
 	path = Algorithms/xxHash/xxHash
 	url = https://github.com/Cyan4973/xxHash.git

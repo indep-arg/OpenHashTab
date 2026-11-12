@@ -19,8 +19,7 @@
 #include <numeric>
 #include <limits>
 
-#include <mbedtls/md.h>
-#include <mbedtls/md4.h>
+#include <md4.h>
 #include <mbedtls/md5.h>
 #include <mbedtls/sha1.h>
 #include <mbedtls/sha256.h>
@@ -90,17 +89,17 @@ public:
   mbedtls_ ## name ## _context,\
   (size),\
   &mbedtls_ ## name ## _init,\
-  &mbedtls_ ## name ## _starts_ret,\
+  &mbedtls_ ## name ## _starts,\
   &mbedtls_ ## name ## _free,\
-  &mbedtls_ ## name ## _update_ret,\
-  &mbedtls_ ## name ## _finish_ret\
+  &mbedtls_ ## name ## _update,\
+  &mbedtls_ ## name ## _finish\
 >
 
 template <bool is224>
-int sha256_starts_ret_binder(mbedtls_sha256_context* ctx) { return mbedtls_sha256_starts_ret(ctx, is224); }
+int sha256_starts_binder(mbedtls_sha256_context* ctx) { return mbedtls_sha256_starts(ctx, is224); }
 
 template <bool is384>
-int sha512_starts_ret_binder(mbedtls_sha512_context* ctx) { return mbedtls_sha512_starts_ret(ctx, is384); }
+int sha512_starts_binder(mbedtls_sha512_context* ctx) { return mbedtls_sha512_starts(ctx, is384); }
 
 using Md4HashContext = MBED_HASH_CONTEXT_TYPE(md4, 16);
 using Md5HashContext = MBED_HASH_CONTEXT_TYPE(md5, 16);
@@ -110,37 +109,37 @@ using Sha224HashContext = MbedHashContext<
   mbedtls_sha256_context,
   28,
   &mbedtls_sha256_init,
-  &sha256_starts_ret_binder<true>,
+  &sha256_starts_binder<true>,
   &mbedtls_sha256_free,
-  &mbedtls_sha256_update_ret,
-  &mbedtls_sha256_finish_ret
+  &mbedtls_sha256_update,
+  &mbedtls_sha256_finish
 >;
 using Sha256HashContext = MbedHashContext<
   mbedtls_sha256_context,
   32,
   &mbedtls_sha256_init,
-  &sha256_starts_ret_binder<false>,
+  &sha256_starts_binder<false>,
   &mbedtls_sha256_free,
-  &mbedtls_sha256_update_ret,
-  &mbedtls_sha256_finish_ret
+  &mbedtls_sha256_update,
+  &mbedtls_sha256_finish
 >;
 using Sha384HashContext = MbedHashContext<
   mbedtls_sha512_context,
   48,
   &mbedtls_sha512_init,
-  &sha512_starts_ret_binder<true>,
+  &sha512_starts_binder<true>,
   &mbedtls_sha512_free,
-  &mbedtls_sha512_update_ret,
-  &mbedtls_sha512_finish_ret
+  &mbedtls_sha512_update,
+  &mbedtls_sha512_finish
 >;
 using Sha512HashContext = MbedHashContext<
   mbedtls_sha512_context,
   64,
   &mbedtls_sha512_init,
-  &sha512_starts_ret_binder<false>,
+  &sha512_starts_binder<false>,
   &mbedtls_sha512_free,
-  &mbedtls_sha512_update_ret,
-  &mbedtls_sha512_finish_ret
+  &mbedtls_sha512_update,
+  &mbedtls_sha512_finish
 >;
 
 class Blake2SpHashContext final : public HashContext
@@ -240,18 +239,18 @@ class ED2kHashContext final : public HashContext
     if (size == 0)
       return;
 
-    mbedtls_md4_update_ret(&current_chunk, (const uint8_t*)data, size);
+    mbedtls_md4_update(&current_chunk, (const uint8_t*)data, size);
     hashed += size;
 
     if (hashed % k_chunk_size == 0)
     {
-      mbedtls_md4_finish_ret(&current_chunk, last_chunk_hash);
+      mbedtls_md4_finish(&current_chunk, last_chunk_hash);
 
       mbedtls_md4_free(&current_chunk);
       mbedtls_md4_init(&current_chunk);
-      mbedtls_md4_starts_ret(&current_chunk);
+      mbedtls_md4_starts(&current_chunk);
 
-      mbedtls_md4_update_ret(&root_hash, last_chunk_hash, sizeof(last_chunk_hash));
+      mbedtls_md4_update(&root_hash, last_chunk_hash, sizeof(last_chunk_hash));
     }
   }
 
@@ -259,10 +258,10 @@ public:
   ED2kHashContext()
   {
     mbedtls_md4_init(&current_chunk);
-    mbedtls_md4_starts_ret(&current_chunk);
+    mbedtls_md4_starts(&current_chunk);
 
     mbedtls_md4_init(&root_hash);
-    mbedtls_md4_starts_ret(&root_hash);
+    mbedtls_md4_starts(&root_hash);
   }
 
   void Update(const void* data, size_t size)
@@ -281,7 +280,7 @@ public:
   {
     if (hashed < k_chunk_size)
     {
-      mbedtls_md4_finish_ret(&current_chunk, out);
+      mbedtls_md4_finish(&current_chunk, out);
       return;
     }
 
@@ -294,7 +293,7 @@ public:
       }
       if (hashed % k_chunk_size == 0)
       {
-        mbedtls_md4_finish_ret(&root_hash, out);
+        mbedtls_md4_finish(&root_hash, out);
         return;
       }
     }
@@ -303,9 +302,9 @@ public:
     mbedtls_md4_clone(&copy_root_hash, &root_hash);
 
     uint8_t partial_chunk[16]{};
-    mbedtls_md4_finish_ret(&current_chunk, partial_chunk);
-    mbedtls_md4_update_ret(&copy_root_hash, partial_chunk, sizeof(partial_chunk));
-    mbedtls_md4_finish_ret(&copy_root_hash, out);
+    mbedtls_md4_finish(&current_chunk, partial_chunk);
+    mbedtls_md4_update(&copy_root_hash, partial_chunk, sizeof(partial_chunk));
+    mbedtls_md4_finish(&copy_root_hash, out);
     mbedtls_md4_free(&copy_root_hash);
   }
 

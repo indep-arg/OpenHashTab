@@ -3,7 +3,6 @@ cmake_minimum_required(VERSION 3.14)
 project(mbedtls)
 
 add_library(${PROJECT_NAME} STATIC
-        mbedtls/library/md4.c
         mbedtls/library/md5.c
         mbedtls/library/platform_util.c
         mbedtls/library/ripemd160.c
