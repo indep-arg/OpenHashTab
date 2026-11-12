@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Project Sdk="WixToolset.Sdk/6.0.1" DefaultTargets="Build"
+<Project Sdk="WixToolset.Sdk/7.0.1" DefaultTargets="Build"
     xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
     <ItemGroup Label="ProjectConfigurations">
         <ProjectConfiguration Include="Machine|x86">
@@ -39,13 +39,15 @@
     <PropertyGroup>
         <DefineConstants>$(DefineConstants);ProductVersion=$(ProductVersion);BuildDirectory=$(BuildDirectory);BuildDirectory32=$(BuildDirectory32);AlgorithmsDllsDirectory=$(AlgorithmsDllsDirectory)</DefineConstants>
         <Pedantic>true</Pedantic>
+        <!-- WiX v7 requires accepting the Open Source Maintenance Fee EULA, see https://docs.firegiant.com/wix/osmf/ -->
+        <AcceptEula>wix7</AcceptEula>
         <IntermediateOutputPath>$(SolutionDir)build\wix_$(Configuration)_$(Platform)\</IntermediateOutputPath>
         <OutputPath>$(SolutionDir)install\</OutputPath>
         <TargetName>OpenHashTab_$(Configuration)_$(Platform)</TargetName>
     </PropertyGroup>
     <ItemGroup>
-        <PackageReference Include="WixToolset.Util.wixext" Version="6.0.1" />
-        <PackageReference Include="WixToolset.UI.wixext" Version="6.0.1" />
+        <PackageReference Include="WixToolset.Util.wixext" Version="7.0.1" />
+        <PackageReference Include="WixToolset.UI.wixext" Version="7.0.1" />
     </ItemGroup>
     <Target Name="SignMsi">
         <Message Importance="high" Text="SignMsi: @(SignMsi)" />
